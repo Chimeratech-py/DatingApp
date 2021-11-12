@@ -21,6 +21,7 @@ namespace API.Controllers
 
         public AccountController(DataContext context, ITokenService tokenService)
         {
+            //context for database, tokenservice for tokens/sessions
             _tokenService = tokenService;
             _context = context;
         }
@@ -36,6 +37,7 @@ namespace API.Controllers
 
             using var hmac = new HMACSHA512();
 
+            //set data according to AppUser attributes defined in API.Entities AppUser class
             var user = new AppUser
             {
                 UserName = registerDto.Username.ToLower(),
@@ -43,9 +45,12 @@ namespace API.Controllers
                 PasswordSalt = hmac.Key
             };
 
+            //add to current context class
+            //save changes to upload data to sqlite database
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
+            //return DTO with username and token for session control
             return new UserDto
             {
                 Username = user.UserName,
@@ -57,8 +62,9 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
+            //lambda, assign to x if username from database matches parameter username
+            //singleordefault throws an exception if more than one element found
             var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
-
             if (user == null) return Unauthorized("Invalid username");
 
             using var hmac = new HMACSHA512(user.PasswordSalt);
