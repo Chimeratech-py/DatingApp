@@ -1,0 +1,6 @@
+make sure appropriate dotnet-ef version is appropriate to project
+
+Powershell and CMD commands so far:
+1. dotnet ef migrations add [migrationname] -o Data/Migrations 		add a migration
+2. dotnet ef database update						update database according to latest migration 
+3. dotnet ef database drop						drops database according to latest migration

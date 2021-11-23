@@ -13,6 +13,8 @@ namespace API.Middleware
 {
     public class ExceptionMiddleware
     {
+        //Ilogger logs errors to console
+        //IHostEnvironment detects if env is production or debug mode
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
         private readonly IHostEnvironment _env;
